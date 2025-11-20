@@ -435,7 +435,7 @@
         }
 
         .voucher-logo img {
-            height: 20px;
+            height: 25px;
         }
 
         /* 🚀 NEW: Watermark styles */
@@ -499,7 +499,7 @@
             margin-top: 0;
             font-size: 1.5rem; /* Bigger title */
             font-weight: 700;
-            text-align: center;
+            text-align: left;
             margin-bottom: 20px;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;

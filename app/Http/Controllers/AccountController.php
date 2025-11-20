@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ChartOfAccount;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AccountController extends Controller
@@ -17,32 +18,80 @@ class AccountController extends Controller
 
     public function store(Request $request)
     {
+        // 1. VALIDATION: Checks DB for duplicates automatically
+        // If duplicate, it stops here and sends 422 Error back to JS
         $validated = $this->validatePayload($request);
-        $account = ChartOfAccount::create($validated);
-        return response()->json(['success' => true, 'account' => $account]);
+
+        try {
+            $account = ChartOfAccount::create($validated);
+            return response()->json([
+                'success' => true, 
+                'message' => 'Account created successfully!',
+                'account' => $account
+            ]);
+        } catch (\Exception $e) {
+            // 2. SAFETY NET: Catches unexpected DB errors (like connection issues)
+            return response()->json([
+                'success' => false, 
+                'message' => 'Database Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function update(Request $request, ChartOfAccount $account)
     {
-        $validated = $this->validatePayload($request, updating: true);
-        $account->update($validated);
-        return response()->json(['success' => true, 'account' => $account->fresh()]);
+        // Pass the $account object so validation ignores its own ID
+        $validated = $this->validatePayload($request, $account);
+
+        try {
+            $account->update($validated);
+            return response()->json([
+                'success' => true, 
+                'message' => 'Account updated successfully!',
+                'account' => $account->fresh()
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Update Error: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function destroy(ChartOfAccount $account)
     {
-        $account->delete();
-        return response()->json(['success' => true]);
+        // Check if this account acts as a parent to others
+        $hasChildren = ChartOfAccount::where('parent_account_number', $account->account_number)->exists();
+
+        if ($hasChildren) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'Cannot delete: This account has sub-accounts. Please move or delete them first.'
+            ], 422);
+        }
+
+        try {
+            $account->delete();
+            return response()->json(['success' => true, 'message' => 'Account deleted']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Could not delete: ' . $e->getMessage()], 500);
+        }
     }
 
     public function bulkDestroy(Request $request)
     {
         $ids = collect($request->input('ids', []))->filter()->all();
+        
         if (empty($ids)) {
             return response()->json(['success' => false, 'message' => 'No IDs provided'], 422);
         }
-        $deleted = ChartOfAccount::whereIn('id', $ids)->delete();
-        return response()->json(['success' => true, 'deletedCount' => $deleted]);
+
+        try {
+            $deleted = ChartOfAccount::whereIn('id', $ids)->delete();
+            return response()->json(['success' => true, 'deletedCount' => $deleted]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Bulk delete failed: ' . $e->getMessage()], 500);
+        }
     }
 
     public function export(): StreamedResponse
@@ -83,12 +132,26 @@ class AccountController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    private function validatePayload(Request $request, bool $updating = false): array
+    /**
+     * Centralized Validation Logic
+     * Accepts optional $account model to handle "ignore ID" logic during updates
+     */
+    private function validatePayload(Request $request, ?ChartOfAccount $account = null): array
     {
+        // Define the unique rule dynamically
+        // "unique:table,column"
+        // If updating, append ",id" to ignore the current record
+        $uniqueRule = Rule::unique('chart_of_accounts', 'account_number');
+        
+        if ($account) {
+            $uniqueRule->ignore($account->id);
+        }
+
         return $request->validate([
             'account_group' => ['required', 'string', 'max:255'],
             'account_type' => ['required', 'string', 'max:255'],
-            'account_number' => ['required', 'integer'],
+            // This is the CRITICAL fix:
+            'account_number' => ['required', 'integer', $uniqueRule],
             'is_parent' => ['required', 'integer', 'in:0,1'],
             'parent_account_number' => ['nullable', 'integer'],
             'description' => ['nullable', 'string'],
@@ -96,5 +159,3 @@ class AccountController extends Controller
         ]);
     }
 }
-
-

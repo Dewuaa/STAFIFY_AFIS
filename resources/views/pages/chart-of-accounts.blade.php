@@ -190,6 +190,14 @@
         border-color: var(--primary);
         box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
     }
+    
+    /* Style for disabled inputs */
+    .form-control:disabled {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        cursor: not-allowed;
+        border-color: #e9ecef;
+    }
 
     .form-control::placeholder {
         color: var(--gray-light);
@@ -969,6 +977,18 @@
                                 </select>
                             </div>
                         </div>
+                        
+                        <!-- I've kept this commented out as per your previous file, but logic supports it -->
+                        <!-- <div class="form-group">
+                            <label class="form-label">Status</label>
+                            <div class="status-toggle">
+                                <label class="switch">
+                                    <input type="checkbox" id="accountStatus" checked>
+                                    <span class="slider"></span>
+                                </label>
+                                <span id="statusLabel">Active</span>
+                            </div>
+                        </div> -->
 
                         <div class="form-group">
                             <label for="description" class="form-label">Description</label>
@@ -1262,8 +1282,8 @@
         // --- Add Event Listeners ---
         row.addEventListener("click", (e) => {
             if (!e.target.closest('.action-btn') && !e.target.closest('.account-checkbox')) {
-                populateFormFromAccount(account);
-                document.getElementById('formIcon').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Update: This defaults to 'view' mode now
+                populateFormFromAccount(account, 'view'); 
             }
         });
         row.querySelector(".edit-btn").addEventListener("click", (e) => {
@@ -1347,83 +1367,137 @@
         updatePreview();
     }
 
+    // --- NEW HELPER: Handle Form States (Create vs View vs Edit) ---
+    function setFormMode(mode) {
+        const elements = [
+            "accountGroup", "accountType", "customAccountNumber", 
+            "customAccountName", "isParent", "parentAccount", 
+            "description", "accountStatus" // Add "accountStatus" if you added the toggle
+        ];
+        
+        const saveBtn = document.getElementById("saveAccountBtn");
+        const cancelBtn = document.getElementById("cancelEditBtn");
+        const deleteBtn = document.getElementById("deleteAccountBtn");
+        const formTitle = document.getElementById("formTitle");
+        const formIcon = document.getElementById("formIcon");
+
+        // 1. Enable/Disable Inputs
+        elements.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.disabled = (mode === 'view');
+                // Optional: Add visual cue for disabled state
+                if (mode === 'view') el.style.backgroundColor = "#f8f9fa"; 
+                else el.style.backgroundColor = "white";
+            }
+        });
+
+        // 2. Button Visibility & Text
+        if (mode === 'create') {
+            saveBtn.classList.remove('hidden');
+            saveBtn.innerHTML = '<span class="material-icons">save</span> Save Account';
+            cancelBtn.classList.add('hidden');
+            deleteBtn.classList.add('hidden');
+            formTitle.textContent = "Create New Account";
+            formIcon.textContent = "add_circle";
+            
+            // Reset dropdown to show categories
+            document.getElementById("accountType").value = ""; 
+        } 
+        else if (mode === 'view') {
+            saveBtn.classList.add('hidden'); // Hide save in view mode
+            cancelBtn.classList.remove('hidden'); // Show cancel to clear selection
+            cancelBtn.textContent = "Clear Selection";
+            deleteBtn.classList.add('hidden'); // Hide delete in view mode (optional)
+            formTitle.textContent = "Account Details";
+            formIcon.textContent = "visibility";
+        } 
+        else if (mode === 'edit') {
+            saveBtn.classList.remove('hidden');
+            saveBtn.innerHTML = '<span class="material-icons">save</span> Update Account';
+            cancelBtn.classList.remove('hidden');
+            cancelBtn.textContent = "Cancel";
+            deleteBtn.classList.remove('hidden');
+            formTitle.textContent = "Edit Account";
+            formIcon.textContent = "edit";
+        }
+    }
+
     /**
-     * Populates the form when an account is clicked or edited.
+     * Populates the form. Accepted modes: 'view' (default) or 'edit'
      */
-    function populateFormFromAccount(account) {
+    function populateFormFromAccount(account, mode = 'view') {
         if (!account) return;
 
-        // Don't allow editing the "label" rows
+        // Don't allow editing label rows
         if(account.account_number === null) {
-            showMessage('This is a section label and cannot be edited.', 'info');
+            showMessage('This is a section label.', 'info');
             return;
         }
 
+        // 1. Set ID and Group
         document.getElementById("accountId").value = account.id;
         document.getElementById("accountGroup").value = account.account_group;
         
-        // Trigger group change to populate dropdowns, then set values
+        // 2. Trigger group change to populate dropdowns
         handleGroupChange();
         
-        document.getElementById("accountType").value = account.account_number;
+        // 3. Reveal the text fields so we can see/edit the specific Number/Name
+        // We switch the dropdown to 'create-new' to force the inputs to show
+        const accountTypeSelect = document.getElementById("accountType");
+        accountTypeSelect.value = 'create-new'; 
+        handleAccountTypeChange(); 
+
+        // 4. Fill the text fields
+        document.getElementById("customAccountNumber").value = account.account_number;
+        document.getElementById("customAccountName").value = account.account_type;
+
+        // 5. Fill other fields
         document.getElementById("isParent").value = account.is_parent ? "1" : "0";
         document.getElementById("parentAccount").value = account.parent_account_number || "";
         document.getElementById("description").value = account.description || '';
+        
+        // (If you added the toggle from previous steps)
+        const statusToggle = document.getElementById("accountStatus");
+        if(statusToggle) statusToggle.checked = account.is_active == 1;
 
-        // Hide custom fields
-        document.getElementById("customAccountTypeFields").classList.add("hidden");
+        // 6. Apply Mode (Lock or Unlock fields)
+        setFormMode(mode);
+        
+        // 7. Store current account in state
+        appState.currentAccount = account;
+        appState.editMode = (mode === 'edit');
 
         updatePreview();
+        
+        // Scroll to form if editing, but maybe not if just viewing
+        document.getElementById('formIcon').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
     /**
-     * Enters edit mode.
+     * Enters edit mode (Clicked the Pencil Icon)
      */
     function enterEditMode(account) {
-        // Don't allow editing the "label" rows
-        if(account.account_number === null) {
-            showMessage('This is a section label and cannot be edited.', 'info');
-            return;
-        }
-
-        appState.editMode = true;
-        appState.currentAccount = account;
-
-        document.getElementById("formTitle").textContent = "Edit Account";
-        document.getElementById("formIcon").textContent = "edit";
-        document.getElementById("cancelEditBtn").classList.remove("hidden");
-        document.getElementById("deleteAccountBtn").classList.remove("hidden");
-
-        populateFormFromAccount(account);
-        document.getElementById('formIcon').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        populateFormFromAccount(account, 'edit');
     }
 
     /**
-     * Exits edit mode and resets the form.
-     */
-    function exitEditMode() {
-        appState.editMode = false;
-        appState.currentAccount = null;
-
-        document.getElementById("formTitle").textContent = "Create New Account";
-        document.getElementById("formIcon").textContent = "add_circle";
-        document.getElementById("cancelEditBtn").classList.add("hidden");
-        document.getElementById("deleteAccountBtn").classList.add("hidden");
-
-        resetForm();
-    }
-
-    /**
-     * Resets the form to its initial state.
+     * Resets the form to its initial state (Create Mode)
      */
     function resetForm() {
         document.getElementById("accountForm").reset();
         document.getElementById("accountId").value = "";
-        document.getElementById("accountType").innerHTML = '<option value="" disabled selected>Select Category first</option>';
-        document.getElementById("parentAccount").innerHTML = '<option value="" disabled selected>Select Parent Account</option>';
+        
+        // Hide custom fields
         document.getElementById("customAccountTypeFields").classList.add("hidden");
+        
+        // Reset helper logic
+        setFormMode('create');
+        
+        appState.currentAccount = null;
+        appState.editMode = false;
+        
         updatePreview();
-        exitEditMode(); // Ensure edit mode is fully exited
     }
 
     // --- 4. PREVIEW LOGIC ---
@@ -1607,11 +1681,26 @@
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json' // Tell Laravel we want JSON, not HTML
                 },
                 body: JSON.stringify(accountData)
             });
             
+            // Check if response is OK (status 200-299)
+            if (!response.ok) {
+                // If validation error (422), get the JSON message
+                if (response.status === 422) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Validation Failed');
+                }
+                // If Server Error (500), get the text
+                const errorText = await response.text();
+                console.error('Server Error:', errorText); // Log HTML to console for debugging
+                throw new Error(`Server Error (${response.status}). Check Console for details.`);
+            }
+
             const data = await response.json();
+            
             if (data.success) {
                 showMessage(`Account ${appState.editMode ? 'updated' : 'saved'}!`, 'success');
                 await fetchAccountData(); // Refresh all data
@@ -1621,7 +1710,7 @@
             }
         } catch (error) {
             console.error('Save Account Error:', error);
-            showMessage('Error saving account: ' + error.message, 'error');
+            showMessage(error.message, 'error');
         } finally {
             saveBtn.disabled = false;
             saveBtn.innerHTML = originalBtnText;
@@ -1808,7 +1897,10 @@
                 await saveAccountToDatabase(accountData);
             }
         });
-        document.getElementById("cancelEditBtn").addEventListener("click", exitEditMode);
+        document.getElementById("cancelEditBtn").addEventListener("click", () => {
+            // If in view mode, cancel button acts as Clear Selection
+            resetForm();
+        });
         document.getElementById("deleteAccountBtn").addEventListener("click", () => {
             if (appState.currentAccount) {
                 deleteAccount(appState.currentAccount.id, appState.currentAccount.account_type);

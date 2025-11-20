@@ -465,7 +465,7 @@
             margin-top: 0;
             font-size: 1.5rem;
             font-weight: 700;
-            text-align: center;
+            text-align: left;
             margin-bottom: 20px;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
@@ -536,6 +536,7 @@
             border-left: 4px solid var(--primary-color);
             border-radius: 4px;
             font-size: 14px;
+            text-align: left;
         }
         .business-tax-info strong {
             color: var(--primary-color);
@@ -768,7 +769,7 @@
         }
 
         .voucher-logo img {
-            height: 20px;
+            height: 25px;
         }
     </style>
 @endpush
