@@ -6,30 +6,27 @@
 <style>
     /* --- 1. Root Variables (Consistent) --- */
     :root {
-        --primary-color: #3B82F6; /* Staffify blue */
+        --primary-color: #3B82F6;
         --primary-color-hover: #184278;
         --primary-light: #e6ecfe; 
-        --secondary-color: #f1f5f9; /* Light grey for secondary buttons/cards */
+        --secondary-color: #f1f5f9;
         --secondary-color-hover: #e2e8f0;
         --danger-color: #e74c3c;
         --danger-color-hover: #c0392b;
         --warning-color: #f39c12;
-        --warning-color-hover: #e67e22;
-        --success-color: #22c55e; /* Brighter green */
-        --success-light: #dcfce7; /* Light green */
-        --danger-light: #fee2e2;  /* Light red */
-        
+        --success-color: #22c55e;
+        --success-light: #dcfce7;
+        --danger-light: #fee2e2;
         --text-color: #334155;
         --text-color-light: #64748b;
         --border-color: #e2e8f0;
         --white: #ffffff;
-        
         --border-radius: 6px;
-        --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07);
+        --box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07);
         --transition: all 0.2s ease-in-out;
     }
     
-    /* --- 2. General Page Layout (Consistent) --- */
+    /* --- 2. General Layout --- */
     .bank-reconciliation-wrapper {
         padding: 0;
         max-width: 100%;
@@ -41,118 +38,79 @@
         background: var(--white);
         border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
-        padding: 24px;
+        padding: 20px; /* Reduced padding slightly */
         margin-bottom: 24px;
     }
 
-    /* Replaced .filter-controls-group */
+    /* Responsive Filter Header */
     .filter-header {
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
         gap: 20px;
+        flex-wrap: wrap; /* Allow wrapping */
     }
     
+    .filter-form-wrapper {
+        flex-grow: 1;
+        max-width: 100%;
+    }
+
     .filter-form-group {
         display: flex;
         align-items: flex-end;
         gap: 10px;
-        flex-grow: 1;
+        flex-wrap: wrap; /* Important for mobile */
     }
     
     .filter-form-group .form-group {
+        margin-bottom: 0;
         flex-grow: 1;
-        max-width: 300px;
-        margin-bottom: 0; /* Override default */
+    }
+
+    /* Make select responsive instead of fixed 250px */
+    #bank-filter {
+        width: 250px;
+        max-width: 100%; 
     }
 
     .filter-actions {
         text-align: right;
+        white-space: nowrap; /* Keep button text on one line */
     }
 
-    .content-card {
-        background: var(--white);
-        border-radius: var(--border-radius);
-        box-shadow: var(--box-shadow);
-        overflow: hidden; /* For table border-radius */
-    }
-    
-    .content-card-body {
-        padding: 24px;
-    }
-    
-    .content-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    /* --- 3. Unified Button System (No Bootstrap) --- */
+    /* --- 3. Button Styles --- */
     .btn {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         font-weight: 600;
         color: var(--white);
-        text-align: center;
-        vertical-align: middle;
         cursor: pointer;
-        user-select: none;
-        background-color: transparent;
         border: 1px solid transparent;
         padding: 10px 16px;
-        font-size: 1rem;
+        font-size: 0.95rem;
         border-radius: var(--border-radius);
         transition: var(--transition);
-        text-decoration: none; /* Reset */
+        text-decoration: none;
+        height: 42px; /* Enforce consistent height */
     }
-    
-    .btn-primary {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-        color: var(--white);
-    }
-    .btn-primary:hover {
-        background-color: var(--primary-color-hover);
-        border-color: var(--primary-color-hover);
-    }
-    
-    /* Cancel/Secondary Button */
-    .btn-secondary {
-        background-color: var(--danger-color);
-        border-color: var(--danger-color);
-        color: var(--white);
-    }
-    .btn-secondary:hover {
-        background-color: var(--danger-color-hover);
-        border-color: var(--danger-color-hover);
-    }
-    
-    /* Clear Filter Button */
-    .btn-light {
-        background-color: var(--secondary-color);
-        color: var(--text-color);
-        border-color: var(--border-color);
-    }
-    .btn-light:hover {
-        background-color: var(--secondary-color-hover);
-    }
+    .btn-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
+    .btn-primary:hover { background-color: var(--primary-color-hover); }
+    .btn-secondary { background-color: var(--danger-color); border-color: var(--danger-color); }
+    .btn-secondary:hover { background-color: var(--danger-color-hover); }
+    .btn-light { background-color: var(--secondary-color); color: var(--text-color); border-color: var(--border-color); }
+    .btn-light:hover { background-color: var(--secondary-color-hover); }
 
     .btn-icon-delete {
-        padding: 8px;
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        background-color: var(--secondary-color);
-        color: var(--text-color-light);
-        border: none;
-        transition: var(--transition);
-        cursor: pointer;
+        padding: 8px; width: 36px; height: 36px; border-radius: 50%;
+        background-color: var(--secondary-color); color: var(--text-color-light);
+        border: none; cursor: pointer; transition: var(--transition);
+        display: flex; align-items: center; justify-content: center;
     }
-    .btn-icon-delete:hover {
-        background-color: var(--danger-color);
-        color: var(--white);
-    }
+    .btn-icon-delete:hover { background-color: var(--danger-color); color: var(--white); }
 
-    /* --- 4. Summary Cards (Consistent) --- */
+    /* --- 4. Summary Cards --- */
     .summary-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -160,348 +118,129 @@
         margin-bottom: 24px;
     }
     .summary-card-item {
-        text-align: center;
         padding: 20px;
         border-radius: var(--border-radius);
         background-color: var(--white);
         border: 1px solid var(--border-color);
         box-shadow: var(--box-shadow);
+        text-align: center;
     }
     .stat-icon-wrapper {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 16px auto;
+        width: 48px; height: 48px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 12px auto;
     }
     .stat-icon-wrapper svg { width: 24px; height: 24px; }
     .icon-deposits { background-color: var(--success-light); color: var(--success-color); }
     .icon-withdrawals { background-color: var(--danger-light); color: var(--danger-color); }
     .icon-balance { background-color: var(--primary-light); color: var(--primary-color); }
-    .summary-label {
-        font-size: 14px;
-        font-weight: 600;
-        text-transform: uppercase;
-        margin-bottom: 8px;
-        color: var(--text-color-light);
-    }
-    .summary-value {
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0;
-    }
-    .text-success { color: var(--success-color) !important; }
-    .text-danger { color: var(--danger-color) !important; }
-    .text-primary-custom { color: var(--primary-color) !important; }
+    .summary-label { font-size: 13px; font-weight: 600; text-transform: uppercase; color: var(--text-color-light); margin-bottom: 4px; }
+    .summary-value { font-size: 22px; font-weight: 700; }
+    .text-success { color: var(--success-color); }
+    .text-danger { color: var(--danger-color); }
+    .text-primary-custom { color: var(--primary-color); }
 
+    /* --- 5. Table Styles --- */
+    .content-card { background: var(--white); border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden; }
+    .content-card-body { padding: 20px; }
+    .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+    
+    .table-responsive-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .transaction-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 800px; /* Force scroll on small screens */ }
+    .transaction-table th { background-color: #f8f9fa; padding: 12px 16px; text-align: left; font-weight: 600; color: var(--text-color-light); text-transform: uppercase; font-size: 12px; border-bottom: 1px solid var(--border-color); }
+    .transaction-table td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); color: var(--text-color); vertical-align: middle; }
+    .transaction-table tr:hover { background-color: #f8fafc; }
+    
+    .badge-pending { background-color: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 11px; }
+    .badge-cleared { background-color: var(--success-light); color: var(--success-color); padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 11px; }
+    .badge-outstanding { background-color: var(--danger-light); color: var(--danger-color); padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 11px; }
 
-    /* --- 5. Transaction Table (Consistent) --- */
-    .table-responsive-wrapper {
-        overflow-x: auto;
-    }
+    /* --- 6. Modal & Forms --- */
+    .custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1050; opacity: 0; transition: opacity 0.2s; }
+    .custom-modal-overlay.active { display: flex; opacity: 1; }
+    .custom-modal-content { background: var(--white); border-radius: 12px; width: 95%; max-width: 600px; max-height: 90vh; display: flex; flex-direction: column; transform: scale(0.95); transition: transform 0.2s; }
+    .custom-modal-overlay.active .custom-modal-content { transform: scale(1); }
     
-    .transaction-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 14px;
-    }
-    .transaction-table th {
-        background-color: #f8f9fa;
-        padding: 12px 16px;
-        text-align: left;
-        font-weight: 600;
-        color: var(--text-color-light);
-        text-transform: uppercase;
-        font-size: 12px;
-        border-bottom: 1px solid var(--border-color);
-    }
-    .transaction-table td {
-        padding: 12px 16px;
-        border-bottom: 1px solid var(--border-color);
-        color: var(--text-color);
-        vertical-align: middle;
-    }
-    .transaction-table tr:hover {
-        background-color: var(--secondary-color);
-    }
-    .badge-pending { 
-        background-color: #fef3c7; color: #92400e; padding: 4px 10px; 
-        border-radius: 12px; font-weight: 600; font-size: 12px;
-    }
-    .badge-cleared { 
-        background-color: var(--success-light); color: var(--success-color); 
-        padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 12px;
-    }
-    .badge-outstanding { 
-        background-color: var(--danger-light); color: var(--danger-color); 
-        padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 12px;
-    }
-    .transaction-table th:last-child {
-        text-align: center; width: 1%; padding-right: 24px;
-    }
-    .transaction-table td:last-child {
-        text-align: right; width: 1%; padding-right: 0;
-    }
-    .transaction-table .action-container {
-        display: flex;
-        gap: 8px;
-        justify-content: flex-end;
-        margin-right: 24px; 
-    }
+    .custom-modal-header { padding: 15px 20px; border-bottom: 1px solid var(--border-color); }
+    .custom-modal-title { font-size: 18px; font-weight: 600; margin: 0; }
+    .custom-modal-body { padding: 20px; overflow-y: auto; }
 
-    /* --- 6. Utilities & Pagination (No Bootstrap) --- */
-    .pagination-container {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-        padding: 24px;
-    }
-    
-    .pagination-list {
-        display: flex;
-        padding-left: 0;
-        list-style: none;
-        margin: 0;
-    }
-    
-    .pagination-item .pagination-link {
-        position: relative;
-        display: block;
-        padding: 0.5rem 0.75rem;
-        margin-left: -1px;
-        line-height: 1.25;
-        color: var(--primary-color);
-        background-color: var(--white);
-        border: 1px solid #dee2e6;
-        text-decoration: none;
-        transition: var(--transition);
-    }
-    
-    .pagination-item:first-child .pagination-link {
-        margin-left: 0;
-        border-top-left-radius: var(--border-radius);
-        border-bottom-left-radius: var(--border-radius);
-    }
-    
-    .pagination-item:last-child .pagination-link {
-        border-top-right-radius: var(--border-radius);
-        border-bottom-right-radius: var(--border-radius);
-    }
-    
-    .pagination-item .pagination-link:hover {
-        z-index: 2;
-        color: var(--primary-color-hover);
-        background-color: var(--secondary-color);
-        border-color: #dee2e6;
-    }
-    
-    .pagination-item.active .pagination-link {
-        z-index: 3;
-        color: var(--white);
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-    }
+    .modal-tabs-nav { display: flex; gap: 20px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
+    .modal-tab-link { background: none; border: none; padding: 10px 0; cursor: pointer; color: var(--text-color-light); font-weight: 500; border-bottom: 2px solid transparent; transition: all 0.2s; }
+    .modal-tab-link.active { color: var(--primary-color); border-bottom-color: var(--primary-color); font-weight: 600; }
+    .modal-tab-pane { display: none; }
+    .modal-tab-pane.active { display: block; }
 
-    .page-info {
-        font-size: 14px;
-        color: #6c757d;
-    }
-    .entries-info {
-        font-size: 14px;
-        color: #6c757d;
-        margin-bottom: 15px;
-    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group-full { grid-column: 1 / -1; }
+    .form-label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; }
+    .form-field { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px; background-color: #fff; box-sizing: border-box; }
+    .form-field:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px var(--primary-light); }
+    .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); }
 
-    /* --- 7. NEW MODAL (No Bootstrap) --- */
-    .custom-modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: none; /* Hidden by default */
-        align-items: center;
-        justify-content: center;
-        z-index: 1050;
-        opacity: 0;
-        transition: opacity 0.15s linear;
-    }
-    
-    .custom-modal-overlay.active {
-        display: flex; /* Show modal */
-        opacity: 1;
-    }
+    /* --- 7. Pagination --- */
+    .pagination-container { display: flex; justify-content: center; margin-top: 20px; }
+    .pagination-list { list-style: none; padding: 0; display: flex; }
+    .pagination-link { padding: 8px 12px; border: 1px solid var(--border-color); background: #fff; color: var(--primary-color); text-decoration: none; margin-left: -1px; }
+    .pagination-item:first-child .pagination-link { border-radius: 4px 0 0 4px; }
+    .pagination-item:last-child .pagination-link { border-radius: 0 4px 4px 0; }
+    .pagination-item.active .pagination-link { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
 
-    .custom-modal-content {
-        background: var(--white);
-        border-radius: var(--border-radius);
-        box-shadow: var(--box-shadow);
-        width: 90%;
-        max-width: 800px; /* modal-lg equivalent */
-        max-height: 90vh;
-        display: flex;
-        flex-direction: column;
-        transform: scale(0.95);
-        transition: transform 0.2s ease-out;
-    }
-    
-    .custom-modal-overlay.active .custom-modal-content {
-        transform: scale(1);
-    }
-
-    .custom-modal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .custom-modal-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: var(--text-color);
-        margin: 0;
-    }
-
-    /* 'x' BUTTON STYLE REMOVED */
-
-    .custom-modal-body {
-        padding: 1.5rem;
-        overflow-y: auto;
-        position: relative;
-    }
-    
-    /* --- 8. NEW TAB STYLE (Business Settings Look) --- */
-    .modal-tabs-nav {
-        display: flex;
-        gap: 24px;
-        border-bottom: 1px solid var(--border-color);
-    }
-    
-    .modal-tab-link {
-        background: none;
-        border: none;
-        padding: 12px 0;
-        cursor: pointer;
-        font-size: 1rem;
-        color: var(--text-color-light);
-        border-bottom: 3px solid transparent;
-        transition: var(--transition);
-        font-weight: 500;
-    }
-    
-    .modal-tab-link:hover {
-        color: var(--text-color);
-    }
-    
-    .modal-tab-link.active {
-        color: black;
-        border-bottom-color: var(--primary-color);
-        font-weight: 600;
-    }
-    
-    .modal-tabs-content {
-        padding-top: 1.5rem;
-    }
-    
-    .modal-tab-pane {
-        display: none; /* Hidden by default */
-    }
-    
-    .modal-tab-pane.active {
-        display: block; /* Shown when active */
-    }
-
-    /* --- 9. NEW FORM STYLES (No Bootstrap) --- */
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* 2-column grid */
-        gap: 20px;
-    }
-    
-    .form-group {
-        margin-bottom: 1rem;
-    }
-    
-    .form-group-full {
-        /* Spans full width in a grid */
-        grid-column: 1 / -1; 
-    }
-    
-    .form-label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        color: var(--text-color);
-        font-size: 14px;
-    }
-    
-    /* Common class for input, select, textarea */
-    .form-field {
-        display: block;
-        width: 100%;
-        padding: 10px 12px;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.5;
-        color: var(--text-color);
-        background-color: var(--white);
-        background-clip: padding-box;
-        border: 1px solid var(--border-color);
-        border-radius: var(--border-radius);
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        box-sizing: border-box; /* Important */
-    }
-    
-    /* Specific height for select */
-    .form-field.form-select {
-        height: 44px; /* Match input height */
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 0.75rem center;
-        background-size: 16px 12px;
-    }
-    
-    .form-field.form-textarea {
-        resize: vertical;
-        min-height: 80px;
-    }
-
-    .form-field:focus {
-        color: var(--text-color);
-        background-color: var(--white);
-        border-color: var(--primary-color);
-        outline: 0;
-        box-shadow: 0 0 0 0.25rem var(--primary-light);
-    }
-    
-    .form-text {
-        font-size: 0.875em;
-        color: var(--text-color-light);
-    }
-    
-    .form-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        margin-top: 1.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid var(--border-color);
-    }
-
-    /* --- 10. Media Queries --- */
-    @media (max-width: 992px) {
-        .summary-grid { grid-template-columns: 1fr; }
-        .filter-header { flex-direction: column; align-items: stretch; }
-        .filter-actions { text-align: left !important; margin-top: 10px; }
+    /* --- 8. MEDIA QUERIES (Mobile Responsiveness) --- */
+    @media (max-width: 768px) {
+        /* Stack filter controls */
+        .filter-header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 15px;
+        }
         
-        /* Stack modal form grid on mobile */
-        .form-grid { grid-template-columns: 1fr; }
+        .filter-form-group {
+            flex-direction: column;
+            align-items: stretch;
+            width: 100%;
+        }
+
+        /* Make select full width */
+        #bank-filter {
+            width: 100% !important;
+        }
+
+        /* Buttons stack full width */
+        .filter-form-group .btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        /* Add Transaction button full width */
+        .filter-actions {
+            text-align: center;
+            width: 100%;
+        }
+        .filter-actions .btn {
+            width: 100%;
+        }
+
+        /* Stack Summary Cards */
+        .summary-grid {
+            grid-template-columns: 1fr; /* 1 card per row */
+            gap: 15px;
+        }
+
+        /* Form inside modal stacks */
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        /* Adjust table header/pagination */
+        .content-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .page-info {
+            font-size: 12px;
+        }
     }
 </style>
 @endpush

@@ -61,19 +61,28 @@
             white-space: nowrap;
             direction: ltr;
         }
-        /* This style now applies to the timestamp in the main header */
+        /* TIMESTAMP STYLES */
         .live-timestamp {
             font-size: 0.9rem;
             font-weight: 500;
             color: var(--text-light, #6b7280);
-            white-space: nowrap;
-            margin-top: 10px;
+            margin-top: 0; /* Removed fixed margin, layout handles spacing */
+            white-space: nowrap; /* Desktop: Keep on one line */
+            transition: all 0.2s ease;
         }
 
-        /* Responsive */
+        /* RESPONSIVE OVERRIDES */
         @media (max-width: 768px) {
             .page-title-header {
-                margin: 0 16px 16px 16px; /* Adjust for mobile */
+                margin: 0 16px 16px 16px;
+            }
+
+            .live-timestamp {
+                white-space: normal; /* Allow text to wrap on mobile */
+                font-size: 0.75rem;  /* Smaller font size */
+                text-align: left;    /* Align left to match title */
+                line-height: 1.3;    /* Better readability if wrapped */
+                max-width: 70%;      /* Prevent it from hitting the menu button */
             }
         }
     </style>
