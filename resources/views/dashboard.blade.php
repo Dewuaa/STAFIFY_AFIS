@@ -219,41 +219,69 @@
         }
 
         /* --- 9. Responsive --- */
-        @media (max-width: 1200px) {
+
+        @media (max-width: 1280px) {
             .dashboard-grid {
-                grid-template-columns: repeat(2, 1fr); /* 2 columns on medium */
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on laptop/tablet */
             }
             .grid-col-span-1 {
                 grid-column: span 1 / span 1;
             }
             .grid-col-span-2 {
-                grid-column: span 2 / span 2; /* Spans 2 on medium */
+                grid-column: span 2 / span 2; /* Spans full width of 2-col grid */
             }
             .grid-col-span-4 {
-                grid-column: span 2 / span 2; /* Full-width rows span 2 */
+                grid-column: span 2 / span 2; /* Spans full width of 2-col grid */
             }
         }
+
+        @media (max-width: 1024px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-section, .export-bar {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .filter-section {
+                margin-bottom: 16px;
+            }
+        }
+
         @media (max-width: 768px) {
             .dashboard-grid {
-                grid-template-columns: 1fr; /* 1 column on small */
-                padding: 16px; /* Less padding on mobile */
+                grid-template-columns: 1fr; /* 1 column on mobile */
+                padding: 16px; 
                 gap: 16px;
             }
             .grid-col-span-1,
             .grid-col-span-2,
             .grid-col-span-4 {
-                grid-column: span 1 / span 1; /* All cards are 1 col wide */
+                grid-column: span 1 / span 1; 
             }
             .dashboard-header {
-                flex-direction: column;
-                align-items: stretch;
-                margin: 16px 16px 0 16px; /* Match mobile padding */
+                margin: 16px 16px 0 16px;
+                padding: 16px;
             }
             .filter-section, .export-bar {
                 flex-direction: column;
-                align-items: stretch;
+                gap: 12px;
             }
-            .date-picker { justify-content: space-between; }
+            .date-picker { 
+                width: 100%;
+                justify-content: space-between; 
+            }
+            .filter-dropdown {
+                width: 100%;
+            }
+            .filter-dropdown select {
+                width: 100%;
+            }
+            .export-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
         
         /* --- 10. Clock Modal & Settings (Updated) --- */
