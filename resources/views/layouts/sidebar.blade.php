@@ -28,7 +28,7 @@
 
 </style>
 
-<div class="sidebar-container max-[1024px]:hidden">
+<div class="sidebar-container max-[767px]:hidden">
     <div class="sidebar">
         <nav id="sidebarMenu">
             <div class="sidebarLogo">
@@ -225,7 +225,7 @@
 
         </nav>
 
-        <div class="flex max-[1024px]:hidden flex-col items-start gap-3 poweredBy">
+        <div class="flex max-[767px]:hidden flex-col items-start gap-3 poweredBy">
             <p>Powered By:</p>
             <img src="https://www.stafify.com/cdn/shop/files/e50lj9u5c9xat9j7z3ne_752x.png?v=1613708232" class="site-logo" alt="Stafify Logo">
         </div>
@@ -432,15 +432,37 @@
     });
 
     function toggleSidebar() {
+        if (window.innerWidth <= 767) return; // Disable collapse on mobile
+
         const sidebar = document.querySelector('.sidebar');
         const mainContent = document.querySelector('.main-content');
         sidebar.classList.toggle('collapsed');
+        
+        // Use CSS classes instead of inline styles where possible, or ensure inline styles don't conflict
         if (sidebar.classList.contains('collapsed')) {
             if (mainContent) mainContent.style.marginLeft = "70px";
         } else {
             if (mainContent) mainContent.style.marginLeft = "260px";
         }
     }
+
+    // Clean up inline styles on resize
+    window.addEventListener('resize', function() {
+        const mainContent = document.querySelector('.main-content');
+        if (window.innerWidth <= 767) {
+            if (mainContent) mainContent.style.marginLeft = ""; // Remove inline style to let CSS take over
+        } else {
+            // Restore correct margin based on sidebar state if returning to desktop
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar && mainContent) {
+                 if (sidebar.classList.contains('collapsed')) {
+                    mainContent.style.marginLeft = "70px";
+                } else {
+                    mainContent.style.marginLeft = "260px"; // Or 250px depending on your CSS default
+                }
+            }
+        }
+    });
 
     document.addEventListener("DOMContentLoaded", function() {
         if (window.feather && feather.replace) {
@@ -493,5 +515,4 @@
             if (parentLi) parentLi.classList.add('dropdown-open');
         }
     }
-
 </script>

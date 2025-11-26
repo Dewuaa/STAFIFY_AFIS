@@ -6,6 +6,7 @@ use App\Models\ChartOfAccount;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
 {
@@ -40,6 +41,8 @@ class AccountController extends Controller
 
     public function update(Request $request, ChartOfAccount $account)
     {
+        Log::info('Update Account Payload:', $request->all());
+
         // Pass the $account object so validation ignores its own ID
         $validated = $this->validatePayload($request, $account);
 

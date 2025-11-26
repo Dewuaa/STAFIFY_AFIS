@@ -115,7 +115,7 @@
         
         /* --- 8. Form Styles --- */
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; text-align: left; }
         .form-group.col-span-2 { grid-column: span 2; }
         .form-group label { font-weight: 600; color: var(--text-color); font-size: 14px; text-align: left; }
         .form-group input, .form-group select, .form-group textarea {
@@ -152,7 +152,7 @@
         .invoice-document { background: var(--white); padding: 40px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); max-width: 800px; margin: 0 auto 24px auto; position: relative; }
         
         /* Shared Preview Styles */
-        .receipt-logo img { height: 25px; }
+        .receipt-logo img { max-width: 150px; }
         .receipt-preview-pane h2, .invoice-document h2 {
             color: var(--primary-color); margin-top: 0; font-size: 1.5rem; font-weight: 700;
             text-align: left; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;

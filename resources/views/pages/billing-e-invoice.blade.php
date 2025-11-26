@@ -418,7 +418,7 @@ Stafffy Inc</textarea>
                                 
                                 <div id="nonVatFields" style="display: {{ $isVat ? 'none' : 'contents' }};">
                                     <div class="detail-row" style="padding: 8px 12px; background: #fef2f2; border-top: 2px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
-                                        <div class="detail-value" style="width: 100%; text-align: center; color: var(--danger-color); font-weight: 600; font-size: 12px;">
+                                        <div class="detail-value" style="width: 100%; text-align: center; color: var(--danger-color); font-weight: 600; font-size: 12px; text-align: left;">
                                             THIS DOCUMENT IS NOT VALID FOR CLAIM OF INPUT TAX.
                                         </div>
                                     </div>

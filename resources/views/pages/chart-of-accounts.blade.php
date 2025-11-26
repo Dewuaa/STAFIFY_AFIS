@@ -235,14 +235,14 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 10px 20px;
+        padding: 8px 16px;
         border-radius: var(--border-radius);
         font-weight: 600;
-        font-size: 13px;
+        font-size: 12px;
         cursor: pointer;
         transition: var(--transition);
         border: none;
-        gap: 8px;
+        gap: 6px;
     }
 
     .btn-primary {
@@ -511,13 +511,14 @@
 
     /* Loading spinner */
     .spinner {
-        width: 20px;
-        height: 20px;
-        border: 3px solid rgba(255, 255, 255, 0.3);
+        width: 16px;    
+        height: 16px;     
+        border: 2px solid rgba(255, 255, 255, 0.3);
         border-radius: 50%;
         border-top-color: white;
         animation: spin 1s ease-in-out infinite;
         display: inline-block;
+        box-sizing: border-box;
     }
 
     @keyframes spin {

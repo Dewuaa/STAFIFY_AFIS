@@ -639,7 +639,7 @@ button {
 
 .header .greetings {
     padding-left: 20px;
-    border-left: 1px solid #3b82f6;
+    border-left: 1px solid #000;
 }
 
 .accent-heading {
@@ -1149,6 +1149,17 @@ li.sidebarMenuItem:last-child {
 
 .sidebar.collapsed + .main-content {
     margin-left: 70px;
+}
+
+@media screen and (max-width: 767px) {
+    .main-content {
+        margin-left: 0 !important;
+        width: 100%;
+    }
+    
+    .sidebar.collapsed + .main-content {
+        margin-left: 0 !important;
+    }
 }
 
 /* Dropdown container */
@@ -2631,7 +2642,7 @@ div:where(.swal2-container) .swal2-select {
     margin: 10px 0 !important;
 }
 
-.spinner {
+/* .spinner {
     border: 4px solid #f3f3f3;
     border-top: 4px solid #1f5497;
     border-radius: 50%;
@@ -2648,7 +2659,7 @@ div:where(.swal2-container) .swal2-select {
     100% {
         transform: rotate(360deg);
     }
-}
+} */
 
 .talent-grid {
     display: grid;
@@ -4167,54 +4178,7 @@ select.pagination-select {
 /* === End 201 Files === */
 /* === Start Email Notification === */
 /* === End Email Notification === */
-@media screen and (max-width: 1024px) {
-    .sidebar {
-        width: 68px;
-        padding: 10px;
-    }
 
-    .icon {
-        margin-right: 0;
-        margin-left: 2px;
-    }
-
-    .sidebarMenuItem:last-child:has(button) {
-        display: none;
-    }
-
-    .main-content {
-        margin-left: 78px !important;
-    }
-
-    .menu-text,
-    .sidebar .toggle-btn {
-        display: none;
-    }
-
-    .time-track-wrapper {
-        flex-direction: column;
-    }
-
-    .time-track-wrapper .item {
-        width: 100% !important;
-    }
-
-    .emailNotificationWrapper {
-        flex-direction: column;
-    }
-
-    .poweredBy {
-        display: none;
-    }
-
-    .sidebarMenuItem.has-dropdown ul.desktop {
-        margin-left: 0;
-        padding-left: 0;
-        border: none;
-        border-top: 1px solid #ffffff30;
-        background-color: rgba(var(--alt-primary-color-rgb), 0.08);
-    }
-}
 
 @media screen and (max-width: 768px) {
     .clocked-status {

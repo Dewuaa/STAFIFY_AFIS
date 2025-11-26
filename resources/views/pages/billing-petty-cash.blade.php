@@ -162,7 +162,7 @@
 
         /* Preview Styles */
         .voucher-logo { margin-right: 20px; position: relative; }
-        .voucher-logo img { height: 25px; }
+        .voucher-logo img { max-width: 150px; }
         .voucher-preview-pane::before, .voucher-document::before {
             content: ''; position: absolute; top: 24px; left: 24px; width: 150px; height: 150px;
             background-image: url("{{ asset('assets/images/Staffy-Logo.png') }}");

@@ -285,7 +285,7 @@
 
         /* --- RESPONSIVE QUERIES --- */
 
-        /* Laptop (1024px - 1280px) */
+        /* Laptop / Tablet Landscape (1024px - 1280px) */
         @media (max-width: 1280px) {
             .dashboard-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -294,7 +294,7 @@
             .grid-col-span-2, .grid-col-span-4 { grid-column: span 2; }
         }
 
-        /* Tablet / Mobile Large (Up to 1024px) */
+        /* Tablet Portrait (768px - 1024px) - Sidebar is visible here! */
         @media (max-width: 1024px) {
             .dashboard-header {
                 flex-direction: column;
@@ -310,10 +310,18 @@
                 border-top: 1px solid #f3f4f6;
                 padding-top: 16px;
             }
+            
+            /* Force 1 column grid if sidebar is taking up space */
+            .dashboard-grid {
+                grid-template-columns: 1fr; 
+            }
+            .grid-col-span-1, .grid-col-span-2, .grid-col-span-4 {
+                grid-column: span 1;
+            }
         }
 
-        /* Mobile (Up to 768px) - CRITICAL FIXES */
-        @media (max-width: 768px) {
+        /* Mobile (Up to 767px) - Sidebar is hidden (Hamburger) */
+        @media (max-width: 767px) {
             /* 1. Single Column Grid */
             .dashboard-grid {
                 grid-template-columns: 1fr;

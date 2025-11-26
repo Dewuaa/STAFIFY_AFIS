@@ -13,7 +13,7 @@
     ];
 @endphp
 
-<div class="lg:hidden justify-between items-center gap-20 w-full mobile-nav flex">
+<div class="min-[768px]:hidden justify-between items-center gap-20 w-full mobile-nav flex">
     <!-- Mobile Menu -->
     <button class="hamburger-menu">
         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler icons-tabler-outline icon-tabler-menu">
@@ -25,7 +25,7 @@
     
     <div class="menu-container">
         <button onclick="toggleMenu(event)" class="bento-menu mt-[4px]">
-            <div class="lg:hidden flex-shrink-0">
+            <div class="min-[768px]:hidden flex-shrink-0">
                 <img src="{{ asset('uploads/' . $user['profile_picture']) }}" alt="Profile Picture" class="w-11 h-11 rounded-full object-cover border border-gray-300">
             </div>
         </button>
