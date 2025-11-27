@@ -152,10 +152,27 @@
         transition: all 0.2s ease;
         font-family: inherit;
         background: white;
+        min-height: 44px;
+    }
+
+    .form-group input[type="date"] {
+        padding: 10px 14px;
+    }
+
+    .form-group input[type="color"] {
+        padding: 5px;
+        height: 44px;
     }
 
     .form-group select  {
-      width:100%;
+        width:100%;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 40px;
     }
 
     .form-group input:focus,
@@ -262,6 +279,22 @@
         min-height: 44px;
         display: flex;
         align-items: center;
+        position: relative;
+        padding-right: 40px;
+    }
+
+    .multiselect-display::after {
+        content: '';
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 6px solid #666;
+        pointer-events: none;
     }
 
     .multiselect-display:hover {

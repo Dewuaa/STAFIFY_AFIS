@@ -476,7 +476,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="deposit-amount" class="form-label">Amount *</label>
-                                    <input type="number" class="form-field form-input" id="deposit-amount" name="amount" step="0.01" min="0.01" required>
+                                    <input type="text" class="form-field form-input" id="deposit-amount" name="amount" placeholder="0.00" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="deposit-reference" class="form-label">Reference Number</label>
@@ -532,7 +532,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="withdrawal-amount" class="form-label">Amount *</label>
-                                    <input type="number" class="form-field form-input" id="withdrawal-amount" name="amount" step="0.01" min="0.01" required>
+                                    <input type="text" class="form-field form-input" id="withdrawal-amount" name="amount" placeholder="0.00" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="withdrawal-reference" class="form-label">Check/Ref Number</label>
@@ -592,7 +592,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="adjustment-amount" class="form-label">Amount *</label>
-                                    <input type="number" class="form-field form-input" id="adjustment-amount" name="amount" step="0.01" required>
+                                    <input type="text" class="form-field form-input" id="adjustment-amount" name="amount" placeholder="0.00" required>
                                     <small class="form-text">Use negative values for charges or losses.</small>
                                 </div>
                                 <div class="form-group">
@@ -647,6 +647,76 @@
         if (d && !d.value) d.value = today;
         if (w && !w.value) w.value = today;
         if (a && !a.value) a.value = today;
+
+        // --- Number formatting with commas ---
+        function formatNumberWithCommas(value) {
+            // Remove all non-digit and non-decimal characters
+            let cleaned = value.replace(/[^\d.-]/g, '');
+            
+            // Handle negative sign
+            const isNegative = cleaned.startsWith('-');
+            if (isNegative) {
+                cleaned = cleaned.substring(1);
+            }
+            
+            // Split by decimal point
+            const parts = cleaned.split('.');
+            let integerPart = parts[0];
+            const decimalPart = parts[1];
+            
+            // Add commas to integer part
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            
+            // Reconstruct the number
+            let formatted = integerPart;
+            if (decimalPart !== undefined) {
+                formatted += '.' + decimalPart.substring(0, 2); // Limit to 2 decimal places
+            }
+            
+            if (isNegative) {
+                formatted = '-' + formatted;
+            }
+            
+            return formatted;
+        }
+
+        function setupAmountFormatting(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            
+            // Store the actual numeric value
+            let actualValue = '';
+            
+            input.addEventListener('input', function(e) {
+                const cursorPosition = this.selectionStart;
+                const oldLength = this.value.length;
+                
+                // Format the value
+                const formatted = formatNumberWithCommas(this.value);
+                this.value = formatted;
+                
+                // Adjust cursor position
+                const newLength = formatted.length;
+                const diff = newLength - oldLength;
+                this.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+            });
+            
+            // On form submit, remove commas for server processing
+            const form = input.closest('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Create a hidden input with the clean value
+                    const cleanValue = input.value.replace(/,/g, '');
+                    input.setAttribute('data-formatted', input.value);
+                    input.value = cleanValue;
+                });
+            }
+        }
+
+        // Apply formatting to all amount fields
+        setupAmountFormatting('deposit-amount');
+        setupAmountFormatting('withdrawal-amount');
+        setupAmountFormatting('adjustment-amount');
         
         // --- Custom Modal Logic ---
         const modal = document.getElementById('addTransactionModal');
